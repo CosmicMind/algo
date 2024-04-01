@@ -52,9 +52,10 @@ import {
   listInsert,
   listAppend,
   listRemove,
+  listRemoveFirst,
   listInsertBefore,
   listInsertAfter,
-  listIterateFromFirst, listRemoveFirst,
+  listIterateFromFirst,
 } from '@/structures'
 
 import {
