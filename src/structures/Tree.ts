@@ -35,220 +35,220 @@
  */
 
 import {
-  Optional,
-  assert,
-  guard,
+    Optional,
+    assert,
+    guard,
 } from '@cosmicmind/foundationjs'
 
 import {
-  Stackable,
-  stackIterateFrom,
-  stackDepth,
-  Listable,
-  List,
-  listCreate,
-  listIsFirst,
-  listIsLast,
-  listInsert,
-  listAppend,
-  listRemove,
-  listRemoveFirst,
-  listInsertBefore,
-  listInsertAfter,
-  listIterateFromFirst,
+    Stackable,
+    stackIterateFrom,
+    stackDepth,
+    Listable,
+    List,
+    listCreate,
+    listIsFirst,
+    listIsLast,
+    listInsert,
+    listAppend,
+    listRemove,
+    listRemoveFirst,
+    listInsertBefore,
+    listInsertAfter,
+    listIterateFromFirst,
 } from '@/structures'
 
 import {
-  SentinelNode,
+    SentinelNode,
 } from '@/utils'
 
 export type Tree = Listable & Stackable & {
-  parent?: Tree
-  next?: Tree
-  previous?: Tree
-  children: List<Tree>
-  size: number
+    parent?: Tree
+    next?: Tree
+    previous?: Tree
+    children: List<Tree>
+    size: number
 }
 
 export const TreeCompareFn = <T extends Tree>(a: T, b: T): number => a === b ? 0 : a > b ? 1 : -1
 
 export const treeCreate = <T extends Tree>(props?: Omit<T, keyof Tree>): T => ({
-  ...(props ?? {}) as T,
-  parent: SentinelNode,
-  next: SentinelNode,
-  previous: SentinelNode,
-  children: listCreate<T>(),
-  size: 1,
+    ...(props ?? {}) as T,
+    parent: SentinelNode,
+    next: SentinelNode,
+    previous: SentinelNode,
+    children: listCreate<T>(),
+    size: 1,
 })
 
 /**
  * @performance O(1)
  */
 export function treeInsertChild<T extends Tree>(parent: T, node: T): void {
-  node.parent = parent
-  listInsert(parent.children, node)
-  treeIncreaseSize(parent, node.size)
+    node.parent = parent
+    listInsert(parent.children, node)
+    treeIncreaseSize(parent, node.size)
 }
 
 /**
  * @performance O(1)
  */
 export function treeInsertChildBefore<T extends Tree>(parent: T, node: T, before: T, compare = TreeCompareFn<T>): void {
-  node.parent = parent
-  listInsertBefore(parent.children as List<T>, node, before, compare)
-  treeIncreaseSize(parent, node.size)
+    node.parent = parent
+    listInsertBefore(parent.children as List<T>, node, before, compare)
+    treeIncreaseSize(parent, node.size)
 }
 
 /**
  * @performance O(1)
  */
 export function treeInsertChildAfter<T extends Tree>(parent: T, node: T, after: T, compare = TreeCompareFn<T>): void {
-  node.parent = parent
-  listInsertAfter(parent.children as List<T>, node, after, compare)
-  treeIncreaseSize(parent, node.size)
+    node.parent = parent
+    listInsertAfter(parent.children as List<T>, node, after, compare)
+    treeIncreaseSize(parent, node.size)
 }
 
 /**
  * @performance O(1)
  */
 export function treeAppendChild<T extends Tree>(parent: T, node: T): void {
-  node.parent = parent
-  listAppend(parent.children, node)
-  treeIncreaseSize(parent, node.size)
+    node.parent = parent
+    listAppend(parent.children, node)
+    treeIncreaseSize(parent, node.size)
 }
 
 export function treeRemove<T extends Tree>(node: T, compare = TreeCompareFn<T>): void {
-  const parent = node.parent as Optional<T>
-  if (guard<T>(parent)) {
-    listRemove(parent.children as List<T>, node, compare)
-    treeDecreaseSize(parent, node.size)
-    node.parent = SentinelNode
-  }
+    const parent = node.parent as Optional<T>
+    if (guard<T>(parent)) {
+        listRemove(parent.children as List<T>, node, compare)
+        treeDecreaseSize(parent, node.size)
+        node.parent = SentinelNode
+    }
 }
 
 /**
  * @performance O(n)
  */
 export const treeDepth = <T extends Tree>(root: T): ReturnType<typeof stackDepth> =>
-  stackDepth(root)
+    stackDepth(root)
 
 /**
  * @performance O(1)
  */
 export function treeIsRoot<T extends Tree>(node: T): boolean {
-  return SentinelNode === node.parent
+    return SentinelNode === node.parent
 }
 
 /**
  * @performance O(1)
  */
 export function treeIsLeaf<T extends Tree>(node: T): boolean {
-  return 0 === node.children.count
+    return 0 === node.children.count
 }
 
 /**
  * @performance O(1)
  */
 export function treeIsChild<T extends Tree>(parent: T, node: T, compare = TreeCompareFn<T>): boolean {
-  return guard<T>(node.parent) && 0 === compare(node.parent, parent)
+    return guard<T>(node.parent) && 0 === compare(node.parent, parent)
 }
 
 /**
  * @performance O(1)
  */
 export function treeIsFirstChild<T extends Tree>(parent: T, node: T, compare = TreeCompareFn<T>): boolean {
-  return listIsFirst(parent.children as List<T>, node, compare)
+    return listIsFirst(parent.children as List<T>, node, compare)
 }
 
 /**
  * @performance O(1)
  */
 export function treeIsLastChild<T extends Tree>(parent: T, node: T, compare = TreeCompareFn<T>): boolean {
-  return listIsLast(parent.children as List<T>, node, compare)
+    return listIsLast(parent.children as List<T>, node, compare)
 }
 
 /**
  * @performance O(1)
  */
 export function treeIsOnlyChild<T extends Tree>(parent: T, node: T, compare = TreeCompareFn<T>): boolean {
-  return listIsFirst(parent.children as List<T>, node, compare) && listIsLast(parent.children as List<T>, node, compare)
+    return listIsFirst(parent.children as List<T>, node, compare) && listIsLast(parent.children as List<T>, node, compare)
 }
 
 /**
  * @performance O(h) where h = height of Tree
  */
 export function treeIsChildDeep<T extends Tree>(parent: T, node: T, compare = TreeCompareFn<T>): boolean {
-  let n = node.parent
-  while (guard<T>(n)) {
-    if (0 === compare(n, parent)) {
-      return true
+    let n = node.parent
+    while (guard<T>(n)) {
+        if (0 === compare(n, parent)) {
+            return true
+        }
+        n = n.parent
     }
-    n = n.parent
-  }
-  return false
+    return false
 }
 
 /**
  * @performance O(n)
  */
 export function treeIncreaseSize<T extends Tree>(root: T, size: number): void {
-  assert(0 < size, 'size must be greater than 0')
-  for (const node of stackIterateFrom(root)) {
-    node.size += size
-  }
+    assert(0 < size, 'size must be greater than 0')
+    for (const node of stackIterateFrom(root)) {
+        node.size += size
+    }
 }
 
 /**
  * @performance O(n)
  */
 export function treeDecreaseSize<T extends Tree>(root: T, size: number): void {
-  assert(0 < size, 'size must be greater than 0')
-  for (const n of stackIterateFrom(root)) {
-    n.size -= size
-  }
+    assert(0 < size, 'size must be greater than 0')
+    for (const n of stackIterateFrom(root)) {
+        n.size -= size
+    }
 }
 
 /**
  * @performance O(n)
  */
 export function *depthFirstIterator<T extends Tree>(root: T): IterableIterator<T> {
-  yield root
-  for (const n of listIterateFromFirst(root.children as List<T>)) {
-    yield *depthFirstIterator(n)
-  }
+    yield root
+    for (const n of listIterateFromFirst(root.children as List<T>)) {
+        yield *depthFirstIterator(n)
+    }
 }
 
 /**
  * @performance O(n)
  */
 export function *breadthFirstIterator<T extends Tree>(root: T): IterableIterator<T> {
-  const queue = listCreate<T>()
-  listAppend(queue, { ...root })
+    const queue = listCreate<T>()
+    listAppend(queue, { ...root })
 
-  while (0 < queue.count) {
-    const node = listRemoveFirst(queue) as T
+    while (0 < queue.count) {
+        const node = listRemoveFirst(queue) as T
 
-    yield node
+        yield node
 
-    for (const q of listIterateFromFirst(node.children as List<T>)) {
-      listAppend(queue, { ...q })
+        for (const q of listIterateFromFirst(node.children as List<T>)) {
+            listAppend(queue, { ...q })
+        }
     }
-  }
 }
 
 /**
  * @performance O(n)
  */
 export function treeQuery<T extends Tree>(root: T, ...fn: ((node: T) => boolean)[]): Set<T> {
-  const r = new Set<T>()
-  loop: for (const node of depthFirstIterator(root)) {
-    for (const f of fn) {
-      if (f(node)) {
-        continue
-      }
-      continue loop
+    const r = new Set<T>()
+    loop: for (const node of depthFirstIterator(root)) {
+        for (const f of fn) {
+            if (f(node)) {
+                continue
+            }
+            continue loop
+        }
+        r.add(node)
     }
-    r.add(node)
-  }
-  return r
+    return r
 }
