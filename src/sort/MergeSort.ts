@@ -65,7 +65,7 @@
  */
 
 import {
-  CompareFn,
+    CompareFn,
 } from '@/utils'
 
 /**
@@ -74,56 +74,55 @@ import {
  * @performance O(log(n))
  */
 const merge = <T>(data: T[], p: number, q: number, r: number, fn: CompareFn<T>): void => {
-  const n1 = q - p + 1
-  const n2 = r - q
+    const n1 = q - p + 1
+    const n2 = r - q
 
-  let i
-  let j
-  let k
+    let i
+    let j
+    let k
 
-  const L: T[] = []
-  const R: T[] = []
+    const L: T[] = []
+    const R: T[] = []
 
-  for (i = 0; i < n1; ++i) {
-    L[i] = data[p + i]
-  }
-
-  for (j = 0; j < n2; ++j) {
-    R[j] = data[q + j + 1]
-  }
-
-  i = 0
-  j = 0
-  k = p // initial index of subarray
-
-  // merge the array L, R back into data
-  // while performing the sort operation
-  while (i < n1 && j < n2) {
-    if (1 > fn(L[i], R[j])) {
-      data[k] = L[i]
-      ++i
-    }
-    else {
-      data[k] = R[j]
-      ++j
+    for (i = 0; i < n1; ++i) {
+        L[i] = data[p + i]
     }
 
-    ++k
-  }
+    for (j = 0; j < n2; ++j) {
+        R[j] = data[q + j + 1]
+    }
 
-  // copy remaining elements of L
-  while (i < n1) {
-    data[k] = L[i]
-    ++i
-    ++k
-  }
+    i = 0
+    j = 0
+    k = p // initial index of subarray
 
-  // copy remaining elements of R
-  while (j < n2) {
-    data[k] = R[j]
-    ++j
-    ++k
-  }
+    // merge the array L, R back into data
+    // while performing the sort operation
+    while (i < n1 && j < n2) {
+        if (1 > fn(L[i], R[j])) {
+            data[k] = L[i]
+            ++i
+        } else {
+            data[k] = R[j]
+            ++j
+        }
+
+        ++k
+    }
+
+    // copy remaining elements of L
+    while (i < n1) {
+        data[k] = L[i]
+        ++i
+        ++k
+    }
+
+    // copy remaining elements of R
+    while (j < n2) {
+        data[k] = R[j]
+        ++j
+        ++k
+    }
 }
 
 /**
@@ -132,13 +131,13 @@ const merge = <T>(data: T[], p: number, q: number, r: number, fn: CompareFn<T>):
  * @performance O(n)
  */
 const sort = <T>(data: T[], p: number, r: number, fn: CompareFn<T>): void => {
-  if (p < r) {
+    if (p < r) {
     // same as (p + r) / 2 but avoids overflow for large p
-    const q = Math.floor(p + (r - p) / 2)
-    sort(data, p, q, fn)
-    sort(data, q + 1, r, fn)
-    merge(data, p, q, r, fn)
-  }
+        const q = Math.floor(p + (r - p) / 2)
+        sort(data, p, q, fn)
+        sort(data, q + 1, r, fn)
+        merge(data, p, q, r, fn)
+    }
 }
 
 /**

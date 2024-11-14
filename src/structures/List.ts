@@ -35,12 +35,12 @@
  */
 
 import {
-  Optional,
-  guard,
+    Optional,
+    guard,
 } from '@cosmicmind/foundationjs'
 
 import {
-  SentinelNode,
+    SentinelNode,
 } from '@/utils'
 
 /**
@@ -61,9 +61,9 @@ export const ListCompareFn = <T extends Listable>(a: T, b: T): number => a === b
  * given node definition.
  */
 export const listNodeCreate = <T extends Listable>(props?: Omit<T, keyof Listable>): T => ({
-  ...props as T,
-  next: SentinelNode,
-  previous: SentinelNode,
+    ...props as T,
+    next: SentinelNode,
+    previous: SentinelNode,
 })
 
 /**
@@ -83,9 +83,9 @@ export type List<T extends Listable> = {
  * Creates a new `List` instance.
  */
 export const listCreate = <T extends Listable>(): List<T> => ({
-  first: SentinelNode,
-  last: SentinelNode,
-  count: 0,
+    first: SentinelNode,
+    last: SentinelNode,
+    count: 0,
 })
 
 /**
@@ -95,18 +95,18 @@ export const listCreate = <T extends Listable>(): List<T> => ({
  * @performance O(1)
  */
 export function listInsert<T extends Listable>(list: List<T>, node: T): void {
-  if (guard<T>(list.first)) {
-    list.first.previous = node
-    node.next = list.first
-    node.previous = SentinelNode
-  }
-  else {
-    list.last = node
-    node.previous = SentinelNode
-    node.next = SentinelNode
-  }
-  list.first = node
-  ++list.count
+    if (guard<T>(list.first)) {
+        list.first.previous = node
+        node.next = list.first
+        node.previous = SentinelNode
+    }
+    else {
+        list.last = node
+        node.previous = SentinelNode
+        node.next = SentinelNode
+    }
+    list.first = node
+    ++list.count
 }
 
 /**
@@ -119,22 +119,21 @@ export function listInsert<T extends Listable>(list: List<T>, node: T): void {
  * @performance O(1)
  */
 export function listRemoveFirst<T extends Listable>(list: List<T>): Optional<T> {
-  const node = list.first
-  if (guard<T>(node)) {
-    const next = node.next
-    if (guard<T>(next)) {
-      list.first = next
-      next.previous = SentinelNode
+    const node = list.first
+    if (guard<T>(node)) {
+        const next = node.next
+        if (guard<T>(next)) {
+            list.first = next
+            next.previous = SentinelNode
+        } else {
+            list.first = SentinelNode
+            list.last = SentinelNode
+        }
+        node.previous = SentinelNode
+        node.next = SentinelNode
+        --list.count
     }
-    else {
-      list.first = SentinelNode
-      list.last = SentinelNode
-    }
-    node.previous = SentinelNode
-    node.next = SentinelNode
-    --list.count
-  }
-  return node
+    return node
 }
 
 /**
@@ -145,18 +144,18 @@ export function listRemoveFirst<T extends Listable>(list: List<T>): Optional<T> 
  * @performance O(1)
  */
 export function listAppend<T extends Listable>(list: List<T>, node: T): void {
-  if (guard<T>(list.last)) {
-    list.last.next = node
-    node.previous = list.last
-    node.next = SentinelNode
-  }
-  else {
-    list.first = node
-    node.previous = SentinelNode
-    node.next = SentinelNode
-  }
-  list.last = node
-  ++list.count
+    if (guard<T>(list.last)) {
+        list.last.next = node
+        node.previous = list.last
+        node.next = SentinelNode
+    }
+    else {
+        list.first = node
+        node.previous = SentinelNode
+        node.next = SentinelNode
+    }
+    list.last = node
+    ++list.count
 }
 
 /**
@@ -169,22 +168,21 @@ export function listAppend<T extends Listable>(list: List<T>, node: T): void {
  * @performance O(1)
  */
 export function listRemoveLast<T extends Listable>(list: List<T>): Optional<T> {
-  const node = list.last
-  if (guard<T>(node)) {
-    const previous = node.previous
-    if (guard<T>(previous)) {
-      list.last = previous
-      previous.next = SentinelNode
+    const node = list.last
+    if (guard<T>(node)) {
+        const previous = node.previous
+        if (guard<T>(previous)) {
+            list.last = previous
+            previous.next = SentinelNode
+        } else {
+            list.first = SentinelNode
+            list.last = SentinelNode
+        }
+        node.previous = SentinelNode
+        node.next = SentinelNode
+        --list.count
     }
-    else {
-      list.first = SentinelNode
-      list.last = SentinelNode
-    }
-    node.previous = SentinelNode
-    node.next = SentinelNode
-    --list.count
-  }
-  return node
+    return node
 }
 
 /**
@@ -198,19 +196,19 @@ export function listRemoveLast<T extends Listable>(list: List<T>): Optional<T> {
  * @performance O(1)
  */
 export function listInsertBefore<T extends Listable>(list: List<T>, insert: T, before: T, compare = ListCompareFn<T>): void {
-  if (guard<T>(list.first) && 0 === compare(list.first, before)) {
-    listInsert(list, insert)
-  }
-  else {
-    const previous = before.previous
-    if (guard<T>(previous)) {
-      previous.next = insert
-      insert.previous = previous
-      insert.next = before
-      before.previous = insert
-      ++list.count
+    if (guard<T>(list.first) && 0 === compare(list.first, before)) {
+        listInsert(list, insert)
     }
-  }
+    else {
+        const previous = before.previous
+        if (guard<T>(previous)) {
+            previous.next = insert
+            insert.previous = previous
+            insert.next = before
+            before.previous = insert
+            ++list.count
+        }
+    }
 }
 
 /**
@@ -224,21 +222,21 @@ export function listInsertBefore<T extends Listable>(list: List<T>, insert: T, b
  * @performance O(1)
  */
 export function listRemoveBefore<T extends Listable>(list: List<T>, before: T, compare = ListCompareFn<T>): Optional<T> {
-  const node = before.previous as T
-  if (guard<T>(list.first) && guard<T>(node) && 0 === compare(list.first, node)) {
-    listRemoveFirst(list)
-  }
-  else if (guard<T>(node)) {
-    const previous = node.previous
-    if (guard<T>(previous)) {
-      before.previous = previous
-      previous.next = before
-      node.previous = SentinelNode
-      node.next = SentinelNode
-      --list.count
+    const node = before.previous as T
+    if (guard<T>(list.first) && guard<T>(node) && 0 === compare(list.first, node)) {
+        listRemoveFirst(list)
     }
-  }
-  return node
+    else if (guard<T>(node)) {
+        const previous = node.previous
+        if (guard<T>(previous)) {
+            before.previous = previous
+            previous.next = before
+            node.previous = SentinelNode
+            node.next = SentinelNode
+            --list.count
+        }
+    }
+    return node
 }
 
 /**
@@ -252,19 +250,19 @@ export function listRemoveBefore<T extends Listable>(list: List<T>, before: T, c
  * @performance O(1)
  */
 export function listInsertAfter<T extends Listable>(list: List<T>, insert: T, after: T, compare = ListCompareFn<T>): void {
-  if (guard<T>(list.last) && 0 === compare(list.last, after)) {
-    listAppend(list, insert)
-  }
-  else {
-    const next = after.next
-    if (guard<T>(next)) {
-      next.previous = insert
-      insert.next = next
-      insert.previous = after
-      after.next = insert
-      ++list.count
+    if (guard<T>(list.last) && 0 === compare(list.last, after)) {
+        listAppend(list, insert)
     }
-  }
+    else {
+        const next = after.next
+        if (guard<T>(next)) {
+            next.previous = insert
+            insert.next = next
+            insert.previous = after
+            after.next = insert
+            ++list.count
+        }
+    }
 }
 
 /**
@@ -278,21 +276,21 @@ export function listInsertAfter<T extends Listable>(list: List<T>, insert: T, af
  * @performance O(1)
  */
 export function listRemoveAfter<T extends Listable>(list: List<T>, after: T, compare = ListCompareFn<T>): Optional<T> {
-  const node = after.next as T
-  if (guard<T>(list.last) && guard<T>(node) && 0 === compare(list.last, node)) {
-    listRemoveLast(list)
-  }
-  else if (guard<T>(node)) {
-    const next = node.next
-    if (guard<T>(next)) {
-      next.previous = after
-      after.next = next
-      node.previous = SentinelNode
-      node.next = SentinelNode
-      --list.count
+    const node = after.next as T
+    if (guard<T>(list.last) && guard<T>(node) && 0 === compare(list.last, node)) {
+        listRemoveLast(list)
     }
-  }
-  return node
+    else if (guard<T>(node)) {
+        const next = node.next
+        if (guard<T>(next)) {
+            next.previous = after
+            after.next = next
+            node.previous = SentinelNode
+            node.next = SentinelNode
+            --list.count
+        }
+    }
+    return node
 }
 
 /**
@@ -304,23 +302,23 @@ export function listRemoveAfter<T extends Listable>(list: List<T>, after: T, com
  * @performance O(1)
  */
 export function listRemove<T extends Listable>(list: List<T>, node: T, compare = ListCompareFn<T>): void {
-  if (guard<T>(list.first) && 0 === compare(list.first, node)) {
-    listRemoveFirst(list)
-  }
-  else if (guard<T>(list.last) && 0 === compare(list.last, node)) {
-    listRemoveLast(list)
-  }
-  else {
-    const previous = node.previous
-    const next = node.next
-    if (guard<T>(previous) && guard<T>(next)) {
-      previous.next = next
-      next.previous = previous
-      node.previous = SentinelNode
-      node.next = SentinelNode
-      --list.count
+    if (guard<T>(list.first) && 0 === compare(list.first, node)) {
+        listRemoveFirst(list)
     }
-  }
+    else if (guard<T>(list.last) && 0 === compare(list.last, node)) {
+        listRemoveLast(list)
+    }
+    else {
+        const previous = node.previous
+        const next = node.next
+        if (guard<T>(previous) && guard<T>(next)) {
+            previous.next = next
+            next.previous = previous
+            node.previous = SentinelNode
+            node.next = SentinelNode
+            --list.count
+        }
+    }
 }
 
 /**
@@ -331,44 +329,44 @@ export function listRemove<T extends Listable>(list: List<T>, node: T, compare =
  * @performance O(n)
  */
 export function *listIterateFromFirst<T extends Listable>(list: List<T>): IterableIterator<T> {
-  let n = list.first
-  while (guard<T>(n)) {
-    yield n
-    n = n.next as T
-  }
+    let n = list.first
+    while (guard<T>(n)) {
+        yield n
+        n = n.next as T
+    }
 }
 
 /**
  * @performance O(n)
  */
 export function *listIterateFromLast<T extends Listable>(list: List<T>): IterableIterator<T> {
-  let n = list.last
-  while (guard<T>(n)) {
-    yield n
-    n = n.previous as T
-  }
+    let n = list.last
+    while (guard<T>(n)) {
+        yield n
+        n = n.previous as T
+    }
 }
 
 /**
  * @performance O(n)
  */
 export function *listIterateToNext<T extends Listable>(node: T): IterableIterator<T> {
-  let n = node
-  while (guard(n)) {
-    yield n
-    n = n.next as T
-  }
+    let n = node
+    while (guard(n)) {
+        yield n
+        n = n.next as T
+    }
 }
 
 /**
  * @performance O(n)
  */
 export function *listIterateToPrevious<T extends Listable>(node: T): IterableIterator<T> {
-  let n = node
-  while (guard(n)) {
-    yield n
-    n = n.previous as T
-  }
+    let n = node
+    while (guard(n)) {
+        yield n
+        n = n.previous as T
+    }
 }
 
 /**
@@ -378,9 +376,9 @@ export function *listIterateToPrevious<T extends Listable>(node: T): IterableIte
  * @performance O(n)
  */
 export function listClear<T extends Listable>(list: List<T>): void {
-  while (guard(list.first)) {
-    listRemoveFirst(list)
-  }
+    while (guard(list.first)) {
+        listRemoveFirst(list)
+    }
 }
 
 /**
@@ -391,7 +389,7 @@ export function listClear<T extends Listable>(list: List<T>): void {
  * @performance O(1)
  */
 export function listIsFirst<T extends Listable>(list: List<T>, node: T, compare = ListCompareFn<T>): boolean {
-  return guard<T>(list.first) && 0 === compare(list.first, node)
+    return guard<T>(list.first) && 0 === compare(list.first, node)
 }
 
 /**
@@ -402,34 +400,34 @@ export function listIsFirst<T extends Listable>(list: List<T>, node: T, compare 
  * @performance O(1)
  */
 export function listIsLast<T extends Listable>(list: List<T>, node: T, compare = ListCompareFn<T>): boolean {
-  return guard<T>(list.last) && 0 === compare(list.last, node)
+    return guard<T>(list.last) && 0 === compare(list.last, node)
 }
 
 /**
  * @performance O(n)
  */
 export function listHas<T extends Listable>(list: List<T>, node: T): boolean {
-  for (const n of listIterateFromFirst(list)) {
-    if (n === node) {
-      return true
+    for (const n of listIterateFromFirst(list)) {
+        if (n === node) {
+            return true
+        }
     }
-  }
-  return false
+    return false
 }
 
 /**
  * @performance O(n)
  */
 export function listQuery<T extends Listable>(list: List<T>, ...fn: ((node: T) => boolean)[]): Set<T> {
-  const r = new Set<T>()
-  loop: for (const n of listIterateFromFirst(list)) {
-    for (const f of fn) {
-      if (f(n)) {
-        continue
-      }
-      continue loop
+    const r = new Set<T>()
+    loop: for (const n of listIterateFromFirst(list)) {
+        for (const f of fn) {
+            if (f(n)) {
+                continue
+            }
+            continue loop
+        }
+        r.add(n)
     }
-    r.add(n)
-  }
-  return r
+    return r
 }
