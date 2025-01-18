@@ -40,11 +40,10 @@
  */
 
 import {
-  LinearSort,
+    LinearSort,
 } from '@/utils'
-
 import {
-  CompareFn,
+    CompareFn,
 } from '@/utils'
 
 /**
@@ -56,19 +55,19 @@ import {
  * @performance O(n^2)
  */
 export const selectionSort: LinearSort = <T>(data: T[], fn: CompareFn<T>): void => {
-  let q = 0
+    let q = 0
 
-  for (let i = 0, l = data.length; i < l; ++i) {
-    q = i
+    for (let i = 0, l = data.length; i < l; ++i) {
+        q = i
 
-    for (let j = i + 1; j < l; ++j) {
-      if (0 < fn(data[q], data[j])) {
-        q = j
-      }
+        for (let j = i + 1; j < l; ++j) {
+            if (0 < fn(data[q], data[j])) {
+                q = j
+            }
+        }
+
+        const temp = data[q]
+        data[q] = data[i]
+        data[i] = temp
     }
-
-    const temp = data[q]
-    data[q] = data[i]
-    data[i] = temp
-  }
 }

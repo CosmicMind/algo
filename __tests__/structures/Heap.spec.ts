@@ -31,36 +31,36 @@
  */
 
 import {
-  it,
-  expect,
-  describe,
+    it,
+    expect,
+    describe,
 } from 'vitest'
 
 import {
-  heapSort,
-  buildMaxHeap,
-  // buildMinHeap,
+    heapSort,
+    buildMaxHeap,
+    // buildMinHeap,
 } from '@/index'
 
 describe('Heap', () => {
-  it('buildMaxHeap', () => {
-    const nodes = [ 4, 1, 3, 2, 16, 9, 10, 14, 8, 7 ]
-    buildMaxHeap(nodes)
+    it('buildMaxHeap', () => {
+        const nodes = [ 4, 1, 3, 2, 16, 9, 10, 14, 8, 7 ]
+        buildMaxHeap(nodes)
 
-    expect(nodes).toStrictEqual([ 16, 14, 10, 8, 7, 9, 3, 2, 4, 1 ])
-  })
+        expect(nodes).toStrictEqual([ 16, 14, 10, 8, 7, 9, 3, 2, 4, 1 ])
+    })
 
-  // it('buildMinHeap', () => {
-  //   const nodes = [ 4, 1, 3, 2, 16, 9, 10, 14, 8, 7 ]
-  //   buildMinHeap(nodes)
-  //
-  //   expect(nodes).toStrictEqual([ 1, 4, 2, 3, 9, 7, 8, 10, 14, 16 ])
-  // })
+    // it('buildMinHeap', () => {
+    //   const nodes = [ 4, 1, 3, 2, 16, 9, 10, 14, 8, 7 ]
+    //   buildMinHeap(nodes)
+    //
+    //   expect(nodes).toStrictEqual([ 1, 4, 2, 3, 9, 7, 8, 10, 14, 16 ])
+    // })
 
-  it('heapSort', () => {
-    const nodes = [ 4, 1, 3, 2, 16, 9, 10, 14, 8, 7 ]
-    heapSort(nodes)
+    it('heapSort', () => {
+        const nodes = [ 4, 1, 3, 2, 16, 9, 10, 14, 8, 7 ]
+        heapSort(nodes)
 
-    expect(nodes).toStrictEqual([ 1, 2, 3, 4, 7, 8, 9, 10, 14, 16 ])
-  })
+        expect(nodes).toStrictEqual([ 1, 2, 3, 4, 7, 8, 9, 10, 14, 16 ])
+    })
 })
