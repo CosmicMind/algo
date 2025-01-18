@@ -32,7 +32,7 @@
     "package.json"
   ],
   "scripts": {
-    "lint": "eslint --fix --ext .js,.ts,.tsx",
+    "lint": "eslint --fix --ext .js,.jsx,.ts,.tsx",
     "release": "npm run release:lib",
     "release:lib": "vite build --config vite.config.ts",
     "develop": "npm run develop:lib",
